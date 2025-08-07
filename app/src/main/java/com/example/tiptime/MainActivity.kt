@@ -70,8 +70,7 @@ class MainActivity : ComponentActivity() {
 fun TipTimeLayout() {
     var amountInput by remember { mutableStateOf("") }
 
-    val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    val tip = calculateTip(amountInput)
 
     Column(
         modifier = Modifier
@@ -89,10 +88,13 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             value = amountInput,
-            onValueChange = {amountInput = it},
+            onValueChange = {
+                amountInput = it
+            },
             modifier = Modifier
                 .padding(bottom = 32.dp)
-                .fillMaxWidth())
+                .fillMaxWidth()
+        )
         Text(
             text = stringResource(R.string.tip_amount, tip),
             style = MaterialTheme.typography.displaySmall
@@ -106,25 +108,29 @@ fun TipTimeLayout() {
  * according to the local currency.
  * Example would be "$10.00".
  */
-private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
+private fun calculateTip(amountString: String, tipPercent: Double = 15.0): String {
+    val amount = amountString.toDoubleOrNull() ?: 0.0
     val tip = tipPercent / 100 * amount
     return NumberFormat.getCurrencyInstance().format(tip)
 }
 
 @Composable
 fun EditNumberField(
-        value: String,
-        onValueChange: (String) -> Unit,
-        modifier: Modifier = Modifier) {
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        label = {Text(stringResource(R.string.bill_amount))},
+        label = {
+            Text(stringResource(R.string.bill_amount))
+        },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
 
-    )
+        )
 
 }
 
